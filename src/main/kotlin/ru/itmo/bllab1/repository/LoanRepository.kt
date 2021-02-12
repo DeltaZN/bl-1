@@ -2,7 +2,6 @@ package ru.itmo.bllab1.repository
 
 import org.springframework.data.repository.CrudRepository
 import java.time.LocalDateTime
-import java.util.*
 import javax.persistence.*
 
 @Entity
@@ -18,4 +17,6 @@ class Loan(
     var borrower: Borrower = Borrower(),
 )
 
-interface LoanRepository : CrudRepository<Loan, Long>
+interface LoanRepository : CrudRepository<Loan, Long> {
+    fun findLoansByBorrower(borrower: Borrower): List<Loan>
+}
