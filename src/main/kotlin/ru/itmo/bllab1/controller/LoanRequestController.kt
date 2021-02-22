@@ -1,13 +1,13 @@
 package ru.itmo.bllab1.controller
 
 import org.springframework.web.bind.annotation.*
-import ru.itmo.bllab1.repository.BorrowerRepository
-import ru.itmo.bllab1.repository.Loan
-import ru.itmo.bllab1.repository.LoanRepository
+import ru.itmo.bllab1.repository.*
+import ru.itmo.bllab1.service.CommunicationService
+import ru.itmo.bllab1.service.Notification
 import java.time.LocalDateTime
 import javax.persistence.EntityNotFoundException
 
-data class LoanRequest(
+data class LoanRequestPayload(
     val userId: Long,
     val sum: Double,
     val percent: Double,
@@ -22,31 +22,33 @@ data class LoanResponse(
 @CrossOrigin(origins = ["*"], maxAge = 3600)
 @RequestMapping("/api/loan")
 @RestController
-class LoanController(
-    private val loanRepository: LoanRepository,
+class LoanRequestController(
+    private val loanRequestRepository: LoanRequestRepository,
     private val borrowerRepository: BorrowerRepository,
+    private val comms: CommunicationService,
 ) {
 
     @GetMapping("/borrower/{id}")
-    fun getBorrowerLoans(@PathVariable id: Long): List<Loan> {
+    fun getBorrowerLoans(@PathVariable id: Long): List<LoanRequest> {
         val borrower = borrowerRepository.findById(id).orElseThrow {
             EntityNotFoundException("Borrower with id $id not found!")
         }
-        return loanRepository.findLoansByBorrower(borrower)
+        return loanRequestRepository.findLoansByBorrower(borrower)
     }
 
     @GetMapping("{id}")
-    fun getLoan(@PathVariable id: Long): Loan = loanRepository.findById(id).orElseThrow {
+    fun getLoan(@PathVariable id: Long): LoanRequest = loanRequestRepository.findById(id).orElseThrow {
         EntityNotFoundException("Loan with id $id not found!")
     }
 
     @PostMapping
-    fun makeLoan(@RequestBody payload: LoanRequest): LoanResponse {
+    fun makeLoan(@RequestBody payload: LoanRequestPayload): LoanResponse {
         val borrower = borrowerRepository.findById(payload.userId).orElseThrow {
             EntityNotFoundException("Borrower with id ${payload.userId} not found!")
         }
-        val loan = Loan(0, payload.sum, payload.percent, LocalDateTime.now(), payload.finishDate, borrower)
-        loanRepository.save(loan)
-        return LoanResponse("Loan approved", loan.id)
+        val loan = LoanRequest(0, payload.sum, LoanRequestStatus.NEW, payload.percent, payload.finishDate, borrower)
+        loanRequestRepository.save(loan)
+        comms.broadcastNotificationToManagers(Notification(loan.id, "A loan awaits for approval"))
+        return LoanResponse("Wait for loan approval", loan.id)
     }
 }

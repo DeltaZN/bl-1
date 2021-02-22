@@ -4,29 +4,25 @@ import org.springframework.data.repository.CrudRepository
 import java.time.LocalDateTime
 import javax.persistence.*
 
-enum class LoanStatus {
-    NORMAL,
-    EXPIRED,
-    CLOSED,
+enum class LoanRequestStatus {
+    NEW,
+    APPROVED,
+    REJECTED,
 }
 
 @Entity
-class Loan(
+class LoanRequest(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long = 0,
     var sum: Double = 0.0,
+    var requestStatus: LoanRequestStatus = LoanRequestStatus.NEW,
     var percent: Double = 0.0,
-    var startDate: LocalDateTime = LocalDateTime.now(),
     var finishDate: LocalDateTime = LocalDateTime.now(),
-    var loanStatus: LoanStatus = LoanStatus.NORMAL,
     @ManyToOne
     var borrower: Borrower = Borrower(),
-    @ManyToOne
-    var approver: Manager = Manager(),
-    var loanReqId: Long = 0,
 )
 
-interface LoanRepository : CrudRepository<Loan, Long> {
-    fun findLoansByLoanStatus(status: LoanStatus): List<Loan>
+interface LoanRequestRepository : CrudRepository<LoanRequest, Long> {
+    fun findLoansByBorrower(borrower: Borrower): List<LoanRequest>
 }
