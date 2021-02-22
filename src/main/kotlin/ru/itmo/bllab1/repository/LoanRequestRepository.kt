@@ -18,7 +18,7 @@ class LoanRequest(
     var sum: Double = 0.0,
     var requestStatus: LoanRequestStatus = LoanRequestStatus.NEW,
     var percent: Double = 0.0,
-    var finishDate: LocalDateTime = LocalDateTime.now(),
+    var loanDays: Int = 0,
     @ManyToOne
     var borrower: Borrower = Borrower(),
 )

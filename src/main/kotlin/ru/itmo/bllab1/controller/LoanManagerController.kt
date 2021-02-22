@@ -5,6 +5,7 @@ import ru.itmo.bllab1.repository.*
 import ru.itmo.bllab1.service.CommunicationService
 import ru.itmo.bllab1.service.MoneyService
 import ru.itmo.bllab1.service.Notification
+import java.time.LocalDateTime
 import javax.persistence.EntityNotFoundException
 
 data class ManageLoanRequest(
@@ -32,7 +33,7 @@ class LoanManagerController(
             EntityNotFoundException("Manager with id ${payload.managerId} not found!")
         }
 
-        val loan = Loan(0, loanRequest.sum, loanRequest.percent, finishDate = loanRequest.finishDate,
+        val loan = Loan(0, loanRequest.sum, loanRequest.percent, finishDate = LocalDateTime.now().plusDays(loanRequest.loanDays.toLong()),
             borrower = loanRequest.borrower, approver = manager, loanReqId = loanRequest.id)
         loanRequest.requestStatus = LoanRequestStatus.APPROVED
         loanRequestRepository.save(loanRequest)

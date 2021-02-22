@@ -4,14 +4,13 @@ import org.springframework.web.bind.annotation.*
 import ru.itmo.bllab1.repository.*
 import ru.itmo.bllab1.service.CommunicationService
 import ru.itmo.bllab1.service.Notification
-import java.time.LocalDateTime
 import javax.persistence.EntityNotFoundException
 
 data class LoanRequestPayload(
     val userId: Long,
     val sum: Double,
     val percent: Double,
-    val finishDate: LocalDateTime,
+    val loanDays: Int,
 )
 
 data class LoanResponse(
@@ -46,7 +45,7 @@ class LoanRequestController(
         val borrower = borrowerRepository.findById(payload.userId).orElseThrow {
             EntityNotFoundException("Borrower with id ${payload.userId} not found!")
         }
-        val loan = LoanRequest(0, payload.sum, LoanRequestStatus.NEW, payload.percent, payload.finishDate, borrower)
+        val loan = LoanRequest(0, payload.sum, LoanRequestStatus.NEW, payload.percent, payload.loanDays, borrower)
         loanRequestRepository.save(loan)
         comms.broadcastNotificationToManagers(Notification(loan.id, "A loan awaits for approval"))
         return LoanResponse("Wait for loan approval", loan.id)
