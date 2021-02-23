@@ -21,6 +21,7 @@ class LoanManagerController(
     private val loanRequestRepository: LoanRequestRepository,
     private val loanRepository: LoanRepository,
     private val moneyService: MoneyService,
+    private val borrowerRepository: BorrowerRepository,
     private val comms: CommunicationService,
 ) {
     @PostMapping("/approve")
@@ -64,4 +65,18 @@ class LoanManagerController(
 
         return MessageIdResponse("Loan request rejected", loanRequest.id)
     }
+
+    @GetMapping("/borrower/{id}")
+    fun getBorrowerLoans(@PathVariable id: Long): List<Loan> {
+        val borrower = borrowerRepository.findById(id).orElseThrow {
+            EntityNotFoundException("Borrower with id $id not found!")
+        }
+        return loanRepository.findLoansByBorrower(borrower)
+    }
+
+    @GetMapping("{id}")
+    fun getLoan(@PathVariable id: Long): LoanRequest = loanRequestRepository.findById(id).orElseThrow {
+        EntityNotFoundException("Loan with id $id not found!")
+    }
+
 }

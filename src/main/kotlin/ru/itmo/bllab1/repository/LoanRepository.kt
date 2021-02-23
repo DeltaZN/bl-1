@@ -29,4 +29,5 @@ class Loan(
 
 interface LoanRepository : CrudRepository<Loan, Long> {
     fun findLoansByLoanStatus(status: LoanStatus): List<Loan>
+    fun findLoansByBorrower(borrower: Borrower): List<Loan>
 }
