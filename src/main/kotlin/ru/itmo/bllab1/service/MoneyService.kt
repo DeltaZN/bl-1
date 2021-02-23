@@ -10,6 +10,6 @@ interface MoneyService {
 
 @Service
 class MoneyServiceStub : MoneyService {
-    override fun sendMoney(borrower: Borrower, money: Double): Unit = TODO("Stub")
-    override fun checkMoneyTransaction(borrower: Borrower): Boolean = true
+    override fun sendMoney(borrower: Borrower, money: Double) {}
+    override fun checkMoneyTransaction(borrower: Borrower) = true
 }

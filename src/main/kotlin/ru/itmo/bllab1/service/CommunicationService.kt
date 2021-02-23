@@ -19,7 +19,7 @@ interface CommunicationService {
 
 @Service
 class CommunicationServiceStub : CommunicationService {
-    override fun sendNotificationToManager(notification: Notification, manager: Manager): Unit = TODO("Just a stub")
-    override fun sendNotificationToBorrower(notification: Notification, borrower: Borrower): Unit = TODO("Just a stub")
-    override fun broadcastNotificationToManagers(notification: Notification): Unit = TODO("Just a stub")
+    override fun sendNotificationToManager(notification: Notification, manager: Manager) {}
+    override fun sendNotificationToBorrower(notification: Notification, borrower: Borrower) {}
+    override fun broadcastNotificationToManagers(notification: Notification) {}
 }
