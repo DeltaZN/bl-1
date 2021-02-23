@@ -32,6 +32,13 @@ class UserController(
     fun getBorrowerData(@PathVariable id: Long): Borrower = borrowerRepository.findById(id).orElseThrow {
         EntityNotFoundException("Borrower with id $id not found!")
     }
+
+    @GetMapping("/borrower")
+    fun getBorrowersData(): Iterable<Borrower> = borrowerRepository.findAll()
+
+    @GetMapping("/manager")
+    fun getManagersData(): Iterable<Manager> = managerRepository.findAll()
+
     @GetMapping("/manager/{id}")
     fun getManagerData(@PathVariable id: Long): Manager = managerRepository.findById(id).orElseThrow {
         EntityNotFoundException("Manager with id $id not found!")
