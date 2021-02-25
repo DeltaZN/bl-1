@@ -75,7 +75,7 @@ class LoanManagerController(
     }
 
     @GetMapping("{id}")
-    fun getLoan(@PathVariable id: Long): LoanRequest = loanRequestRepository.findById(id).orElseThrow {
+    fun getLoan(@PathVariable id: Long): Loan = loanRepository.findById(id).orElseThrow {
         EntityNotFoundException("Loan with id $id not found!")
     }
 

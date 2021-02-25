@@ -13,7 +13,9 @@ class LoanDaemon(
 ) {
     @Scheduled(cron = "0 0 5 * * ?")
     fun processLoans() {
-        loanRepository.findLoansByLoanStatus(LoanStatus.NORMAL).forEach { l ->
+        loanRepository.findLoansByLoanStatus(LoanStatus.NORMAL)
+            .plus(loanRepository.findLoansByLoanStatus(LoanStatus.EXPIRED))
+            .forEach { l ->
             if (LocalDateTime.now() > l.finishDate)
                 l.loanStatus = LoanStatus.EXPIRED
             l.sum += l.percent * l.sum
@@ -22,7 +24,7 @@ class LoanDaemon(
         }
 
         loanRepository.findLoansByLoanStatus(LoanStatus.EXPIRED).forEach { l ->
-            l.percent += 5
+            l.percent += 0.05
             loanRepository.save(l)
             comms.sendNotificationToBorrower(Notification(l.id, "Loan percent is increased, you have to pay faster otherwise we'll send collectors!"), l.borrower)
         }
