@@ -135,6 +135,8 @@ class UserController(
 
     @PostMapping("/borrower/register")
     fun registerBorrower(@RequestBody payload: RegisterUserRequest): MessageIdResponse {
+        if (userRepository.findByLogin(payload.login).isPresent)
+            throw IllegalStateException("User already registered")
         val passportData = PassportData()
         passportRepository.save(passportData)
         val borrower = Borrower(0, payload.firstName, payload.lastName, passportData)
@@ -151,6 +153,8 @@ class UserController(
     @PostMapping("/manager/register")
     @PreAuthorize("hasAnyRole('ADMIN')")
     fun registerManager(@RequestBody payload: RegisterUserRequest): MessageIdResponse {
+        if (userRepository.findByLogin(payload.login).isPresent)
+            throw IllegalStateException("User already registered")
         val manager = Manager(0, payload.firstName, payload.lastName)
         val user = EUser(
             0, payload.login, encoder.encode(payload.password), manager, null,
@@ -165,6 +169,8 @@ class UserController(
     @PostMapping("/admin/register")
     @PreAuthorize("hasAnyRole('ADMIN')")
     fun registerAdmin(@RequestBody payload: RegisterUserRequest): MessageIdResponse {
+        if (userRepository.findByLogin(payload.login).isPresent)
+            throw IllegalStateException("User already registered")
         val manager = Manager(0, payload.firstName, payload.lastName)
         val user = EUser(
             0, payload.login, encoder.encode(payload.password), manager, null,
