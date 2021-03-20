@@ -12,7 +12,7 @@ import javax.persistence.EntityNotFoundException
 data class ProcessPaymentRequest(
     val sum: Double,
     val borrowerId: Long,
-    val loanId: Long,
+    val loanId: Long
 )
 
 class ProcessPaymentException(msg: String) : RuntimeException(msg)
@@ -24,7 +24,7 @@ class LoanBorrowerController(
     private val loanRepository: LoanRepository,
     private val moneyService: MoneyService,
     private val borrowerRepository: BorrowerRepository,
-    private val userService: UserService,
+    private val userService: UserService
 ) {
 
     @PostMapping("pay")

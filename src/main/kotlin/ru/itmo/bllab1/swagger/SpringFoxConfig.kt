@@ -65,8 +65,7 @@ class SpringFoxConfig : WebMvcConfigurationSupport() {
             API_VERSION,
             "Terms of service",
             Contact("", "", ""),
-            "License of API",
-            "API license URL",
+            "License of API",            "API license URL",
             Collections.emptyList())
 
 }

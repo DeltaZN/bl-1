@@ -20,7 +20,7 @@ class LoanRequest(
     var percent: Double = 0.0,
     var loanDays: Int = 0,
     @ManyToOne
-    var borrower: Borrower = Borrower(),
+    var borrower: Borrower = Borrower()
 )
 
 interface LoanRequestRepository : CrudRepository<LoanRequest, Long> {

@@ -8,7 +8,7 @@ import java.time.LocalDateTime
 data class Notification(
     val objectId: Long,
     val message: String,
-    val time: LocalDateTime = LocalDateTime.now(),
+    val time: LocalDateTime = LocalDateTime.now()
 )
 
 interface CommunicationService {

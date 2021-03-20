@@ -24,7 +24,7 @@ class Loan(
     var borrower: Borrower = Borrower(),
     @ManyToOne
     var approver: Manager = Manager(),
-    var loanReqId: Long = 0,
+    var loanReqId: Long = 0
 )
 
 interface LoanRepository : CrudRepository<Loan, Long> {

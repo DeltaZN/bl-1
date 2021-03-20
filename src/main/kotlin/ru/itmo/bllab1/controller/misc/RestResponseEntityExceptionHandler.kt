@@ -10,7 +10,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import javax.persistence.EntityNotFoundException
 
 data class MessageResponse(
-    val message: String,
+    val message: String
 )
 
 @ControllerAdvice

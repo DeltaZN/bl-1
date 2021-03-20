@@ -9,7 +9,7 @@ class PassportData(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long = 0,
     @Column(name = "passport_series_number")
-    var passportSeriesAndNumber: String = "",
+    var passportSeriesAndNumber: String = ""
 )
 
 interface PassportRepository : CrudRepository<PassportData, Long>
@@ -26,7 +26,7 @@ class Borrower(
     @OneToOne
     var passportData: PassportData = PassportData(),
     @OneToOne(mappedBy = "borrower")
-    var eUser: EUser = EUser(),
+    var eUser: EUser = EUser()
 )
 
 interface BorrowerRepository : CrudRepository<Borrower, Long>

@@ -13,7 +13,7 @@ class Manager(
     @Column(name = "last_name")
     var lastName: String = "",
     @OneToOne(mappedBy = "manager")
-    var EUser: EUser = EUser(),
+    var EUser: EUser = EUser()
 )
 
 interface ManagerRepository : CrudRepository<Manager, Long>

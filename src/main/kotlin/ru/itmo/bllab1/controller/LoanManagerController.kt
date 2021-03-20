@@ -11,7 +11,7 @@ import java.time.LocalDateTime
 import javax.persistence.EntityNotFoundException
 
 data class ManageLoanRequest(
-    val loanReqId: Long,
+    val loanReqId: Long
 )
 
 @CrossOrigin(origins = ["*"], maxAge = 3600)
@@ -23,7 +23,7 @@ class LoanManagerController(
     private val moneyService: MoneyService,
     private val borrowerRepository: BorrowerRepository,
     private val comms: CommunicationService,
-    private val userService: UserService,
+    private val userService: UserService
 ) {
 
     data class LoanData(
