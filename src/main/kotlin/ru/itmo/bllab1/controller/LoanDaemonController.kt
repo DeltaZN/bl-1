@@ -1,5 +1,6 @@
 package ru.itmo.bllab1.controller
 
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
@@ -13,7 +14,8 @@ class LoanDaemonController(
     private val loanDaemon: LoanDaemon,
 ) {
     @PostMapping("/process")
-    fun approveLoan(): MessageIdResponse {
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    fun processLoans(): MessageIdResponse {
         loanDaemon.processLoans()
         return MessageIdResponse("Loans processed")
     }

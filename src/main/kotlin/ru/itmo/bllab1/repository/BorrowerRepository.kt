@@ -25,6 +25,8 @@ class Borrower(
     var lastName: String = "",
     @OneToOne
     var passportData: PassportData = PassportData(),
+    @OneToOne(mappedBy = "borrower")
+    var eUser: EUser = EUser(),
 )
 
 interface BorrowerRepository : CrudRepository<Borrower, Long>

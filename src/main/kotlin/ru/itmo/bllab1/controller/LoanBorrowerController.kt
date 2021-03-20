@@ -1,10 +1,12 @@
 package ru.itmo.bllab1.controller
 
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
 import ru.itmo.bllab1.repository.BorrowerRepository
 import ru.itmo.bllab1.repository.LoanRepository
 import ru.itmo.bllab1.repository.LoanStatus
 import ru.itmo.bllab1.service.MoneyService
+import ru.itmo.bllab1.service.UserService
 import javax.persistence.EntityNotFoundException
 
 data class ProcessPaymentRequest(
@@ -22,9 +24,11 @@ class LoanBorrowerController(
     private val loanRepository: LoanRepository,
     private val moneyService: MoneyService,
     private val borrowerRepository: BorrowerRepository,
+    private val userService: UserService,
 ) {
 
     @PostMapping("pay")
+    @PreAuthorize("hasAnyRole('BORROWER_CONFIRMED')")
     fun processPayment(@RequestBody payload: ProcessPaymentRequest): MessageIdResponse {
         val borrower = borrowerRepository.findById(payload.borrowerId).orElseThrow {
             EntityNotFoundException("Borrower with id ${payload.borrowerId} not found!")
@@ -33,6 +37,8 @@ class LoanBorrowerController(
         val loan = loanRepository.findById(payload.loanId).orElseThrow {
             EntityNotFoundException("Loan with id ${payload.loanId} not found!")
         }
+
+        userService.checkBorrowerAuthority(loan.borrower.id)
 
         if (!moneyService.checkMoneyTransaction(borrower))
             throw ProcessPaymentException("Couldn't process the payment transaction")
