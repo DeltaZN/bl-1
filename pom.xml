@@ -10,12 +10,11 @@
     </parent>
     <groupId>ru.itmo</groupId>
     <artifactId>bl-lab1</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-    <name>bl-lab1</name>
+    <version>1</version>
     <packaging>war</packaging>
     <description>Lab1</description>
     <properties>
-        <java.version>11</java.version>
+        <java.version>1.8</java.version>
         <kotlin.version>1.4.30</kotlin.version>
         <swagger.version>2.9.2</swagger.version>
         <jwt.version>0.9.1</jwt.version>
@@ -67,10 +66,6 @@
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-reflect</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.jetbrains.kotlin</groupId>
-            <artifactId>kotlin-stdlib-jdk8</artifactId>
         </dependency>
 
         <dependency>

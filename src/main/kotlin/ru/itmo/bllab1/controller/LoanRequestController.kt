@@ -12,12 +12,12 @@ import javax.persistence.ManyToOne
 data class LoanRequestPayload(
     val sum: Double,
     val percent: Double,
-    val loanDays: Int,
+    val loanDays: Int
 )
 
 data class LoanResponse(
     val message: String,
-    val id: Long? = null,
+    val id: Long? = null
 )
 
 @CrossOrigin(origins = ["*"], maxAge = 3600)
@@ -27,7 +27,7 @@ class LoanRequestController(
     private val loanRequestRepository: LoanRequestRepository,
     private val borrowerRepository: BorrowerRepository,
     private val comms: CommunicationService,
-    private val userService: UserService,
+    private val userService: UserService
 ) {
 
     companion object {

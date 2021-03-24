@@ -1,7 +1,6 @@
 package ru.itmo.bllab1.repository
 
-import org.springframework.data.repository.CrudRepository
-import java.time.LocalDateTime
+import org.springframework.data.jpa.repository.JpaRepository
 import javax.persistence.*
 
 enum class LoanRequestStatus {
@@ -20,9 +19,9 @@ class LoanRequest(
     var percent: Double = 0.0,
     var loanDays: Int = 0,
     @ManyToOne
-    var borrower: Borrower = Borrower(),
+    var borrower: Borrower = Borrower()
 )
 
-interface LoanRequestRepository : CrudRepository<LoanRequest, Long> {
+interface LoanRequestRepository : JpaRepository<LoanRequest, Long> {
     fun findLoansByBorrower(borrower: Borrower): List<LoanRequest>
 }

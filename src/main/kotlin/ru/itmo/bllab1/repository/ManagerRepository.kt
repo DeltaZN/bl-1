@@ -1,6 +1,6 @@
 package ru.itmo.bllab1.repository
 
-import org.springframework.data.repository.CrudRepository
+import org.springframework.data.jpa.repository.JpaRepository
 import javax.persistence.*
 
 @Entity
@@ -13,7 +13,7 @@ class Manager(
     @Column(name = "last_name")
     var lastName: String = "",
     @OneToOne(mappedBy = "manager")
-    var EUser: EUser = EUser(),
+    var EUser: EUser = EUser()
 )
 
-interface ManagerRepository : CrudRepository<Manager, Long>
+interface ManagerRepository : JpaRepository<Manager, Long>

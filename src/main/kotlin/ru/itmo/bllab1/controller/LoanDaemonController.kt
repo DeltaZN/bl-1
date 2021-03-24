@@ -11,7 +11,7 @@ import ru.itmo.bllab1.service.LoanDaemon
 @RequestMapping("/api/daemon/")
 @RestController
 class LoanDaemonController(
-    private val loanDaemon: LoanDaemon,
+    private val loanDaemon: LoanDaemon
 ) {
     @PostMapping("/process")
     @PreAuthorize("hasAnyRole('ADMIN')")

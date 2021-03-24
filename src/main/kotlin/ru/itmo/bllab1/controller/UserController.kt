@@ -20,22 +20,22 @@ data class RegisterUserRequest(
     val login: String,
     val password: String,
     val firstName: String,
-    val lastName: String,
+    val lastName: String
 )
 
 data class LoginRequest(
     val login: String,
-    val password: String,
+    val password: String
 )
 
 data class MessageIdResponse(
     val message: String,
-    val id: Long? = null,
+    val id: Long? = null
 )
 
 data class AddPassportDataRequest(
     val borrowerId: Long,
-    val passportSeriesNumber: String,
+    val passportSeriesNumber: String
 )
 
 data class JwtResponse(
@@ -58,7 +58,7 @@ class UserController(
     private val authenticationManager: AuthenticationManager,
     private val jwtUtils: JwtUtils,
     private val encoder: PasswordEncoder,
-    private val userService: UserService,
+    private val userService: UserService
 ) {
 
     companion object {

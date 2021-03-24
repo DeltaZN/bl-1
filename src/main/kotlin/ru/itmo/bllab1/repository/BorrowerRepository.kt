@@ -1,6 +1,6 @@
 package ru.itmo.bllab1.repository
 
-import org.springframework.data.repository.CrudRepository
+import org.springframework.data.jpa.repository.JpaRepository
 import javax.persistence.*
 
 @Entity
@@ -9,10 +9,10 @@ class PassportData(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long = 0,
     @Column(name = "passport_series_number")
-    var passportSeriesAndNumber: String = "",
+    var passportSeriesAndNumber: String = ""
 )
 
-interface PassportRepository : CrudRepository<PassportData, Long>
+interface PassportRepository : JpaRepository<PassportData, Long>
 
 @Entity
 class Borrower(
@@ -26,7 +26,7 @@ class Borrower(
     @OneToOne
     var passportData: PassportData = PassportData(),
     @OneToOne(mappedBy = "borrower")
-    var eUser: EUser = EUser(),
+    var eUser: EUser = EUser()
 )
 
-interface BorrowerRepository : CrudRepository<Borrower, Long>
+interface BorrowerRepository : JpaRepository<Borrower, Long>

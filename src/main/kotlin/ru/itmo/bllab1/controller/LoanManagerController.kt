@@ -1,6 +1,7 @@
 package ru.itmo.bllab1.controller
 
 import org.springframework.security.access.prepost.PreAuthorize
+import org.springframework.transaction.support.TransactionTemplate
 import org.springframework.web.bind.annotation.*
 import ru.itmo.bllab1.repository.*
 import ru.itmo.bllab1.service.CommunicationService
@@ -11,7 +12,7 @@ import java.time.LocalDateTime
 import javax.persistence.EntityNotFoundException
 
 data class ManageLoanRequest(
-    val loanReqId: Long,
+    val loanReqId: Long
 )
 
 @CrossOrigin(origins = ["*"], maxAge = 3600)
@@ -23,7 +24,8 @@ class LoanManagerController(
     private val moneyService: MoneyService,
     private val borrowerRepository: BorrowerRepository,
     private val comms: CommunicationService,
-    private val userService: UserService,
+    private val template: TransactionTemplate,
+    private val userService: UserService
 ) {
 
     data class LoanData(
@@ -55,25 +57,18 @@ class LoanManagerController(
             EntityNotFoundException("Loan request with id ${payload.loanReqId} not found!")
         }
 
-        val loan = Loan(
-            0,
-            loanRequest.sum,
-            loanRequest.percent,
-            finishDate = LocalDateTime.now().plusDays(loanRequest.loanDays.toLong()),
-            borrower = loanRequest.borrower,
-            approver = manager,
-            loanReqId = loanRequest.id
-        )
-        loanRequest.requestStatus = LoanRequestStatus.APPROVED
-        loanRequestRepository.save(loanRequest)
-        loanRepository.save(loan)
-
-        moneyService.sendMoney(loanRequest.borrower, loanRequest.sum)
-
-        comms.sendNotificationToBorrower(Notification(loan.id, "Your loan has been approved"), loanRequest.borrower)
 
 
-        return MessageIdResponse("Loan request approved", loan.id)
+      return  template.execute {
+            val loan = Loan(0, loanRequest.sum, loanRequest.percent, finishDate = LocalDateTime.now().plusDays(loanRequest.loanDays.toLong()),
+                borrower = loanRequest.borrower, approver = manager, loanReqId = loanRequest.id)
+            loanRequest.requestStatus = LoanRequestStatus.APPROVED
+            loanRequestRepository.save(loanRequest)
+            loanRepository.save(loan)
+            moneyService.sendMoney(loanRequest.borrower, loanRequest.sum)
+            comms.sendNotificationToBorrower(Notification(loan.id, "Your loan has been approved"), loanRequest.borrower)
+            MessageIdResponse("Loan request approved", loan.id)
+        }?:throw ProcessPaymentException("oops")
     }
 
     @PostMapping("/reject")
