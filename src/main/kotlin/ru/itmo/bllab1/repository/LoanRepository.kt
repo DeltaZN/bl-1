@@ -1,6 +1,6 @@
 package ru.itmo.bllab1.repository
 
-import org.springframework.data.repository.CrudRepository
+import org.springframework.data.jpa.repository.JpaRepository
 import java.time.LocalDateTime
 import javax.persistence.*
 
@@ -27,7 +27,7 @@ class Loan(
     var loanReqId: Long = 0
 )
 
-interface LoanRepository : CrudRepository<Loan, Long> {
+interface LoanRepository : JpaRepository<Loan, Long> {
     fun findLoansByLoanStatus(status: LoanStatus): List<Loan>
     fun findLoansByBorrower(borrower: Borrower): List<Loan>
 }

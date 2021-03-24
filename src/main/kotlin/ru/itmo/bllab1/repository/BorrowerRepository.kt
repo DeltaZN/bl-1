@@ -1,6 +1,6 @@
 package ru.itmo.bllab1.repository
 
-import org.springframework.data.repository.CrudRepository
+import org.springframework.data.jpa.repository.JpaRepository
 import javax.persistence.*
 
 @Entity
@@ -12,7 +12,7 @@ class PassportData(
     var passportSeriesAndNumber: String = ""
 )
 
-interface PassportRepository : CrudRepository<PassportData, Long>
+interface PassportRepository : JpaRepository<PassportData, Long>
 
 @Entity
 class Borrower(
@@ -29,4 +29,4 @@ class Borrower(
     var eUser: EUser = EUser()
 )
 
-interface BorrowerRepository : CrudRepository<Borrower, Long>
+interface BorrowerRepository : JpaRepository<Borrower, Long>

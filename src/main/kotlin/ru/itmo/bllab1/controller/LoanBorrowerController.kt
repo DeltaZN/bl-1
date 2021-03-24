@@ -1,6 +1,7 @@
 package ru.itmo.bllab1.controller
 
 import org.springframework.security.access.prepost.PreAuthorize
+import org.springframework.transaction.support.TransactionTemplate
 import org.springframework.web.bind.annotation.*
 import ru.itmo.bllab1.repository.BorrowerRepository
 import ru.itmo.bllab1.repository.LoanRepository
@@ -24,9 +25,9 @@ class LoanBorrowerController(
     private val loanRepository: LoanRepository,
     private val moneyService: MoneyService,
     private val borrowerRepository: BorrowerRepository,
-    private val userService: UserService
+    private val userService: UserService,
+    private val template: TransactionTemplate
 ) {
-
     @PostMapping("pay")
     @PreAuthorize("hasAnyRole('BORROWER_CONFIRMED')")
     fun processPayment(@RequestBody payload: ProcessPaymentRequest): MessageIdResponse {
@@ -45,16 +46,17 @@ class LoanBorrowerController(
 
         if (loan.loanStatus === LoanStatus.CLOSED)
             throw ProcessPaymentException("Couldn't process CLOSED loan")
+         return template.execute {
+            loan.sum -= payload.sum
+            if (loan.sum <= 0.0) {
+                loan.loanStatus = LoanStatus.CLOSED
+                loanRepository.save(loan)
+                MessageIdResponse("You finally closed your loan, CONGRATULATIONS!!!!", loan.id)
+            } else {
+                loanRepository.save(loan)
+                MessageIdResponse("Money processed, but the loan is still opened, remaining sum - ${loan.sum}", loan.id)
+            }
+        }?:throw ProcessPaymentException("oops")
 
-        loan.sum -= payload.sum
-
-        return if (loan.sum <= 0.0) {
-            loan.loanStatus = LoanStatus.CLOSED
-            loanRepository.save(loan)
-            MessageIdResponse("You finally closed your loan, CONGRATULATIONS!!!!", loan.id)
-        } else {
-            loanRepository.save(loan)
-            MessageIdResponse("Money processed, but the loan is still opened, remaining sum - ${loan.sum}", loan.id)
-        }
     }
 }
