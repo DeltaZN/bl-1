@@ -36,7 +36,7 @@ class LoanDaemon(
     }
 
     fun increasePercent(){
-        template.execute{
+        template.execute {
             loanRepository.findLoansByLoanStatus(LoanStatus.EXPIRED).forEach { l ->
                 l.percent += 0.05
                 loanRepository.save(l)
